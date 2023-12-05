@@ -37,11 +37,18 @@ public class PasswordManager {
     public static void setPassword(@NotNull UUID player, @NotNull String pass) {
 
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             PreparedStatement statement = connection.prepareStatement("UPDATE passwords SET password = ? WHERE player_name = ?")) {
+             @NotNull PreparedStatement existStatement = connection.prepareStatement("SELECT * FROM passwords WHERE player_name = ?");
+             @NotNull PreparedStatement insertStatement = connection.prepareStatement("INSERT INTO passwords (player_name, password) VALUES (?, ?)")) {
 
-            statement.setString(1, pass);
-            statement.setString(2, player.toString());
-            statement.executeUpdate();
+            existStatement.setString(1, player.toString());
+
+            ResultSet existResultSet = existStatement.executeQuery();
+
+            if (existResultSet.next()) return;
+
+            insertStatement.setString(1, player.toString());
+            insertStatement.setString(2, pass);
+            insertStatement.executeUpdate();
 
         } catch (@NotNull SQLException ignored) {
 
@@ -52,7 +59,7 @@ public class PasswordManager {
     public static void removePassword(@NotNull UUID player) {
 
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             @NotNull PreparedStatement statement = connection.prepareStatement("UPDATE passwords SET password = NULL WHERE player_name = ?")) {
+             @NotNull PreparedStatement statement = connection.prepareStatement("DELETE FROM passwords WHERE player_name = ?")) {
 
             statement.setString(1, player.toString());
 
@@ -81,5 +88,7 @@ public class PasswordManager {
         } catch (@NotNull SQLException ignored) {
 
         }
+
     }
+
 }
