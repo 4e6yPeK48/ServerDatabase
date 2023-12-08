@@ -10,7 +10,6 @@ import static org.liny.Main.*;
 
 public class PasswordManager {
 
-
     public static @Nullable String getPassword(@NotNull String player_name) {
 
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
