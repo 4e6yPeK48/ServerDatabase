@@ -32,7 +32,7 @@ public class PasswordManager {
 
     }
 
-    public static void setPassword(@NotNull String player_name, @NotNull String pass) {
+    public static void setPassword(@NotNull String player_name, @NotNull String pass) { // тут
 
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
              @NotNull PreparedStatement existStatement = connection.prepareStatement("SELECT * FROM passwords WHERE player_name = ?");
