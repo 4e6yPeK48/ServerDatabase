@@ -16,11 +16,11 @@ public class WarpManager {
              @NotNull PreparedStatement statement = connection.prepareStatement("INSERT INTO warps (player_uuid, name, world_name, x, y, z) VALUES (?, ?, ?, ?, ?, ?)")) {
 
             statement.setString(1, player);
-            statement.setString(2, warp.name);
-            statement.setString(3, warp.world_name);
-            statement.setInt(4, warp.x);
-            statement.setInt(5, warp.y);
-            statement.setInt(6, warp.z);
+            statement.setString(2, warp.name());
+            statement.setString(3, warp.world_name());
+            statement.setInt(4, warp.x());
+            statement.setInt(5, warp.y());
+            statement.setInt(6, warp.z());
             statement.executeUpdate();
 
         } catch (@NotNull SQLException ignored) {
