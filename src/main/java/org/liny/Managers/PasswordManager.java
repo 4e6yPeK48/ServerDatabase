@@ -4,12 +4,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
-import java.util.UUID;
 
 import static org.liny.Main.*;
 
 public class PasswordManager {
-
 
     public static @Nullable String getPassword(@NotNull String player_name) {
 
@@ -38,15 +36,15 @@ public class PasswordManager {
 
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
              @NotNull PreparedStatement existStatement = connection.prepareStatement("SELECT * FROM passwords WHERE player_name = ?");
-             @NotNull PreparedStatement insertStatement = connection.prepareStatement("INSERT INTO passwords (player_name, password) VALUES (?, ?)")) {
+             @NotNull PreparedStatement insertStatement = connection.prepareStatement("UPDATE passwords SET password = ? WHERE player_name = ?")) {
 
-            existStatement.setString(1, player_name.toString());
+            existStatement.setString(1, player_name);
 
             ResultSet existResultSet = existStatement.executeQuery();
 
             if (existResultSet.next()) return;
 
-            insertStatement.setString(1, player_name.toString());
+            insertStatement.setString(1, player_name);
             insertStatement.setString(2, pass);
             insertStatement.executeUpdate();
 
