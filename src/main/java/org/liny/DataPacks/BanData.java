@@ -2,22 +2,27 @@ package org.liny.DataPacks;
 
 import org.jetbrains.annotations.NotNull;
 
-public class BanData {
+public record BanData(@NotNull String data, @NotNull String who, @NotNull String id, @NotNull String message,
+                      @NotNull String nickname) {
 
-    @NotNull public final String data;
-    @NotNull public final String who;
-    @NotNull public final String id;
-    @NotNull public final String message;
-    @NotNull public final String nickname;
+    public @NotNull String getData() {
+        return data;
+    }
 
-    public BanData(@NotNull String data, @NotNull String who, @NotNull String id, @NotNull String message, @NotNull String nickname) {
+    public @NotNull String getWho() {
+        return who;
+    }
 
-        this.data = data;
-        this.who = who;
-        this.id = id;
-        this.message = message;
-        this.nickname = nickname;
+    public @NotNull String getid() {
+        return id;
+    }
 
+    public @NotNull String getMessage() {
+        return message;
+    }
+
+    public @NotNull String getNickname() {
+        return nickname;
     }
 
 }
