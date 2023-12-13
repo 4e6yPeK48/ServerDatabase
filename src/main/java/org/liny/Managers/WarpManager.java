@@ -59,7 +59,7 @@ public class WarpManager {
 
     }
 
-    public void removeWarp(@NotNull String player, @NotNull String name) {
+    public static void removeWarp(@NotNull String player, @NotNull String name) {
 
         try (@NotNull Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
              @NotNull PreparedStatement statement = connection.prepareStatement("DELETE FROM warps WHERE player_uuid = ? AND name = ?")) {
