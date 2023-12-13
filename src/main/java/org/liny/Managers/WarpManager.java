@@ -3,6 +3,7 @@ package org.liny.Managers;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.liny.DataPacks.Home;
+import org.liny.DataPacks.Warp;
 
 import java.sql.*;
 
@@ -29,9 +30,9 @@ public class WarpManager {
 
     }
 
-    public static @Nullable Home getWarp(@NotNull String warpName) {
+    public static @Nullable Warp getWarp(@NotNull String warpName) {
 
-        Home home = null;
+        Warp home = null;
         try (@NotNull Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
              @NotNull PreparedStatement statement = connection.prepareStatement("SELECT * FROM warps WHERE name = ?")) {
 
@@ -45,7 +46,8 @@ public class WarpManager {
                 @NotNull Integer x = resultSet.getInt("x");
                 @NotNull Integer y = resultSet.getInt("y");
                 @NotNull Integer z = resultSet.getInt("z");
-                home = new Home(warpName, worldName, x, y, z);
+                @NotNull String playerName = resultSet.getString("player_uuid");
+                home = new Warp(playerName, new Home(warpName, worldName, x, y, z));
 
             }
 
