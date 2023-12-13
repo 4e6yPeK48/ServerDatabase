@@ -24,8 +24,8 @@ public class PasswordManager {
 
             }
 
-        } catch (@NotNull SQLException ignored) {
-
+        } catch (@NotNull SQLException e) {
+            e.printStackTrace();
         }
 
         return null;
