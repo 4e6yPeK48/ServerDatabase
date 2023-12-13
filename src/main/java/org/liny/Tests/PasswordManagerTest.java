@@ -6,6 +6,7 @@ import org.liny.Managers.PasswordManager;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.liny.Managers.PasswordManager.setPassword;
 
 public class PasswordManagerTest {
 
@@ -15,7 +16,7 @@ public class PasswordManagerTest {
 
     @Test
     public void testGetPassword() {
-        String playerName = "Krismus";
+        String playerName = "m4estro48";
 
         String password = PasswordManager.getPassword(playerName);
 
@@ -35,5 +36,13 @@ public class PasswordManagerTest {
         String password = PasswordManager.getPassword(playerName);
         System.out.println("Player: " + playerName + ", Password: " + password);
 
+    }
+
+    @Test
+    public void testSetPassword(){
+        String playerName = "m4estro48";
+        String password = "hord1234";
+        setPassword(playerName, password);
+        printPassword(playerName);
     }
 }

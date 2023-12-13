@@ -32,27 +32,27 @@ public class PasswordManager {
 
     }
 
-    public static void setPassword(@NotNull String player_name, @NotNull String pass) { // тут
-
+    public static void setPassword(@NotNull String player_name, @NotNull String pass) {
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             @NotNull PreparedStatement existStatement = connection.prepareStatement("SELECT * FROM passwords WHERE player_name = ?");
-             @NotNull PreparedStatement insertStatement = connection.prepareStatement("UPDATE passwords SET password = ? WHERE player_name = ?")) {
+             PreparedStatement existStatement = connection.prepareStatement("SELECT 1 FROM passwords WHERE player_name = ?");
+             PreparedStatement updateStatement = connection.prepareStatement("UPDATE passwords SET password = ? WHERE player_name = ?")) {
 
             existStatement.setString(1, player_name);
 
-            ResultSet existResultSet = existStatement.executeQuery();
+            try (ResultSet existResultSet = existStatement.executeQuery()) {
+                if (existResultSet.next()) {
+                    // Пользователь существует, обновим его пароль
+                    updateStatement.setString(1, pass);
+                    updateStatement.setString(2, player_name);
+                    updateStatement.executeUpdate();
+                }
+            }
 
-            if (existResultSet.next()) return;
-
-            insertStatement.setString(1, player_name);
-            insertStatement.setString(2, pass);
-            insertStatement.executeUpdate();
-
-        } catch (@NotNull SQLException ignored) {
-
+        } catch (SQLException ignored) {
+            // Обработка исключений, если необходимо
         }
-
     }
+
 
     public static void removePassword(@NotNull String player_name) {
 
