@@ -39,10 +39,23 @@ public class PasswordManagerTest {
     }
 
     @Test
-    public void testSetPassword(){
-        String playerName = "m4estro48";
-        String password = "hord1234";
-        setPassword(playerName, password);
-        printPassword(playerName);
+    public void testSetPassword() {
+        // Тест на установку пароля
+
+        // Замените "testPlayer" на имя игрока, для которого вы хотите провести тест
+        String testPlayer = "m4estro48";
+        String newPassword = "123";
+
+        // Перед тестом убедимся, что в базе данных есть запись с именем testPlayer и паролем NULL
+        PasswordManager.addPassword(testPlayer);
+
+        // Вызываем метод setPassword для установки нового пароля
+        PasswordManager.setPassword(testPlayer, newPassword);
+
+        // Получаем пароль из базы данных после установки
+        String updatedPassword = PasswordManager.getPassword(testPlayer);
+
+        // Проверяем, что пароль обновлен успешно
+        assertEquals(newPassword, updatedPassword);
     }
 }
