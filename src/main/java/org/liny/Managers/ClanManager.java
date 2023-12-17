@@ -184,5 +184,25 @@ public class ClanManager {
         return null;
     }
 
+    public static @Nullable String getClanInventory(@NotNull String clanName) {
+
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+
+             @NotNull PreparedStatement statement = connection.prepareStatement(
+                     "SELECT inventory FROM clans WHERE name = ?")) {
+
+            statement.setString(1, clanName);
+
+            try (@NotNull ResultSet resultSet = statement.executeQuery()) {
+
+                if (resultSet.next()) return resultSet.getString("inventory");
+
+            }
+
+        } catch (@NotNull SQLException ignored) {
+        }
+
+        return null;
+    }
 
 }
