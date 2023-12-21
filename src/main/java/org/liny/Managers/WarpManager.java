@@ -59,6 +59,34 @@ public class WarpManager {
 
     }
 
+    public static @Nullable Warp getWarpFromUuid(@NotNull String playerUuid) {
+
+        Warp home = null;
+        try (@NotNull Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+             @NotNull PreparedStatement statement = connection.prepareStatement("SELECT * FROM warps WHERE player_uuid = ? LIMIT 1")) {
+
+            statement.setString(1, playerUuid);
+
+            @NotNull ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+
+                @NotNull String worldName = resultSet.getString("world_name");
+                @NotNull String warpName = resultSet.getString("name");
+                @NotNull Integer x = resultSet.getInt("x");
+                @NotNull Integer y = resultSet.getInt("y");
+                @NotNull Integer z = resultSet.getInt("z");
+                home = new Warp(playerUuid, new Home(warpName, worldName, x, y, z));
+
+            }
+
+        } catch (@NotNull SQLException ignored) {
+
+        }
+
+        return home;
+    }
+
     public static void removeWarp(@NotNull String player, @NotNull String name) {
 
         try (@NotNull Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
