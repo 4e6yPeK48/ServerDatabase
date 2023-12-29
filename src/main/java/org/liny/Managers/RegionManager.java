@@ -1,6 +1,7 @@
 package org.liny.Managers;
 
 import org.jetbrains.annotations.NotNull;
+import org.liny.DataPacks.Home;
 
 import java.sql.*;
 import java.util.LinkedList;
@@ -62,25 +63,33 @@ public class RegionManager {
 
     }
 
-    public static @NotNull LinkedList<String> getAllServerRegions() {
+    public static @NotNull LinkedList<Home> getAllServerRegions() {
 
-        LinkedList<String> protectionIds = new LinkedList<>();
+        LinkedList<Home> homeList = new LinkedList<>();
 
-        try (@NotNull Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             @NotNull PreparedStatement statement = connection.prepareStatement("SELECT name FROM regions")) {
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+
+             PreparedStatement statement = connection.prepareStatement("SELECT name, world_name, x, y, z FROM regions")) {
 
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
+
                 String name = resultSet.getString("name");
-                protectionIds.add(name);
+                String worldName = resultSet.getString("world_name");
+                Integer x = resultSet.getInt("x");
+                Integer y = resultSet.getInt("y");
+                Integer z = resultSet.getInt("z");
+
+                Home home = new Home(name, worldName, x, y, z);
+                homeList.add(home);
             }
 
-        } catch (@NotNull SQLException ignored) {
+        } catch (SQLException ignored) {
 
         }
 
-        return protectionIds;
+        return homeList;
 
     }
 
