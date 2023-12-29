@@ -62,6 +62,28 @@ public class RegionManager {
 
     }
 
+    public static @NotNull LinkedList<String> getAllServerRegions() {
+
+        LinkedList<String> protectionIds = new LinkedList<>();
+
+        try (@NotNull Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+             @NotNull PreparedStatement statement = connection.prepareStatement("SELECT name FROM regions")) {
+
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                String name = resultSet.getString("name");
+                protectionIds.add(name);
+            }
+
+        } catch (@NotNull SQLException ignored) {
+
+        }
+
+        return protectionIds;
+
+    }
+
     public static @NotNull Boolean isRegionExists(@NotNull UUID player, @NotNull String name) {
 
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
