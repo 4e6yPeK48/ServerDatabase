@@ -12,4 +12,15 @@ public record Point(@NotNull String name, @NotNull String worldName, @NotNull In
     public static @NotNull Point fromHome (@NotNull Home xyz, @NotNull String name) {
         return new Point(name, xyz.world_name(), xyz.x(), xyz.y(), xyz.z());
     }
+
+    @Override
+    public String toString() {
+        return "Point{" +
+                "name='" + name + '\'' +
+                ", worldName='" + worldName + '\'' +
+                ", x=" + x +
+                ", y=" + y +
+                ", z=" + z +
+                '}';
+    }
 }
