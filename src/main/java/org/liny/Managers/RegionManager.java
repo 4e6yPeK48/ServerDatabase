@@ -11,6 +11,10 @@ import static org.liny.Main.*;
 
 public class RegionManager {
 
+    @Deprecated (
+            forRemoval = true,
+            since = "1.1"
+    )
     public static void addRegion(@NotNull UUID player, @NotNull String name, @NotNull Integer x, @NotNull Integer y, @NotNull Integer z, @NotNull String worldName) {
 
         try (@NotNull Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
@@ -22,6 +26,25 @@ public class RegionManager {
             statement.setInt(4, y);
             statement.setInt(5, z);
             statement.setString(6, worldName);
+            statement.executeUpdate();
+
+        } catch (@NotNull SQLException ignored) {
+
+        }
+
+    }
+
+    public static void addRegion(@NotNull UUID player, @NotNull Home point) {
+
+        try (@NotNull Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+             @NotNull PreparedStatement statement = connection.prepareStatement("INSERT INTO regions (player_uuid, name, x, y, z, world_name) VALUES (?, ?, ?, ?, ?)")) {
+
+            statement.setString(1, player.toString());
+            statement.setString(2, point.name());
+            statement.setInt(3, point.x());
+            statement.setInt(4, point.y());
+            statement.setInt(5, point.z());
+            statement.setString(6, point.world_name());
             statement.executeUpdate();
 
         } catch (@NotNull SQLException ignored) {
