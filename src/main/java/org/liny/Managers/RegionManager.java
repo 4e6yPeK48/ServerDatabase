@@ -11,13 +11,17 @@ import static org.liny.Main.*;
 
 public class RegionManager {
 
-    public static void addRegion(@NotNull UUID player, @NotNull String name) {
+    public static void addRegion(@NotNull UUID player, @NotNull String name, @NotNull Integer x, @NotNull Integer y, @NotNull Integer z, @NotNull String worldName) {
 
         try (@NotNull Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             @NotNull PreparedStatement statement = connection.prepareStatement("INSERT INTO regions (player_uuid, name) VALUES (?, ?)")) {
+             @NotNull PreparedStatement statement = connection.prepareStatement("INSERT INTO regions (player_uuid, name, x, y, z, world_name) VALUES (?, ?, ?, ?, ?)")) {
 
             statement.setString(1, player.toString());
             statement.setString(2, name);
+            statement.setInt(3, x);
+            statement.setInt(4, y);
+            statement.setInt(5, z);
+            statement.setString(6, worldName);
             statement.executeUpdate();
 
         } catch (@NotNull SQLException ignored) {
