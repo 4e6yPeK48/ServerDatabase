@@ -2,6 +2,7 @@ package org.liny.Managers;
 
 import org.jetbrains.annotations.NotNull;
 import org.liny.DataPacks.Home;
+import org.liny.DataPacks.Point;
 
 import java.sql.*;
 import java.util.LinkedList;
@@ -34,7 +35,7 @@ public class RegionManager {
 
     }
 
-    public static void addRegion(@NotNull UUID player, @NotNull Home point) {
+    public static void addRegion(@NotNull UUID player, @NotNull Point point) {
 
         try (@NotNull Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
              @NotNull PreparedStatement statement = connection.prepareStatement("INSERT INTO regions (player_uuid, name, x, y, z, world_name) VALUES (?, ?, ?, ?, ?)")) {
@@ -44,7 +45,7 @@ public class RegionManager {
             statement.setInt(3, point.x());
             statement.setInt(4, point.y());
             statement.setInt(5, point.z());
-            statement.setString(6, point.world_name());
+            statement.setString(6, point.worldName());
             statement.executeUpdate();
 
         } catch (@NotNull SQLException ignored) {
