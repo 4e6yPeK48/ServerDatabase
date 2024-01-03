@@ -38,7 +38,7 @@ public class RegionManager {
     public static void addRegion(@NotNull UUID player, @NotNull Point point) {
 
         try (@NotNull Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             @NotNull PreparedStatement statement = connection.prepareStatement("INSERT INTO regions (player_uuid, name, x, y, z, world_name) VALUES (?, ?, ?, ?, ?)")) {
+             @NotNull PreparedStatement statement = connection.prepareStatement("INSERT INTO regions (player_uuid, name, x, y, z, world_name) VALUES (?, ?, ?, ?, ?, ?)")) {
 
             statement.setString(1, player.toString());
             statement.setString(2, point.name());
