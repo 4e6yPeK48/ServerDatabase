@@ -1,6 +1,7 @@
 package org.liny.Managers;
 
 import org.jetbrains.annotations.Nullable;
+import org.liny.ConnectionManager;
 import org.liny.DataPacks.BanData;
 
 import java.sql.*;
@@ -13,8 +14,7 @@ public class BanManager {
 
     public static void addBan(@NotNull String message, @NotNull String date, @NotNull String playerIP, @NotNull String who, @NotNull String nickname) {
 
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             @NotNull PreparedStatement statement = connection.prepareStatement("INSERT INTO bans (message, date, player_ip, who, nickname) VALUES (?, ?, ?, ?, ?)")) {
+        try (@NotNull PreparedStatement statement = ConnectionManager.getConnection().prepareStatement("INSERT INTO bans (message, date, player_ip, who, nickname) VALUES (?, ?, ?, ?, ?)")) {
             statement.setString(1, message);
             statement.setString(2, date);
             statement.setString(3, playerIP);
@@ -28,8 +28,7 @@ public class BanManager {
     }
 
     public static @NotNull Boolean removeBan(@NotNull String nickname) {
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             @NotNull PreparedStatement statement = connection.prepareStatement("DELETE FROM bans WHERE nickname = ?")) {
+        try (@NotNull PreparedStatement statement = ConnectionManager.getConnection().prepareStatement("DELETE FROM bans WHERE nickname = ?")) {
             statement.setString(1, nickname);
             int rowsAffected = statement.executeUpdate();
 
@@ -45,8 +44,7 @@ public class BanManager {
     public static @NotNull Boolean isPlayerBanned(@NotNull String playerIP) {
 
         boolean banExists = false;
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             @NotNull PreparedStatement statement = connection.prepareStatement("SELECT id FROM bans WHERE player_ip = ?")) {
+        try (@NotNull PreparedStatement statement = ConnectionManager.getConnection().prepareStatement("SELECT id FROM bans WHERE player_ip = ?")) {
             statement.setString(1, playerIP);
             ResultSet resultSet = statement.executeQuery();
             banExists = resultSet.next();
@@ -60,8 +58,7 @@ public class BanManager {
 
     public static @Nullable BanData getBanDataL1(@NotNull String playerIP) {
 
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             @NotNull PreparedStatement statement = connection.prepareStatement("SELECT id, message, date, player_ip, who, nickname FROM bans WHERE player_ip = ?")) {
+        try (@NotNull PreparedStatement statement = ConnectionManager.getConnection().prepareStatement("SELECT id, message, date, player_ip, who, nickname FROM bans WHERE player_ip = ?")) {
             statement.setString(1, playerIP);
             ResultSet resultSet = statement.executeQuery();
 
@@ -84,8 +81,7 @@ public class BanManager {
 
     public static @Nullable BanData getBanDataL2(@NotNull String playerNickname) {
 
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             @NotNull PreparedStatement statement = connection.prepareStatement("SELECT id, message, date, player_ip, who, nickname FROM bans WHERE nickname = ?")) {
+        try (@NotNull PreparedStatement statement = ConnectionManager.getConnection().prepareStatement("SELECT id, message, date, player_ip, who, nickname FROM bans WHERE nickname = ?")) {
             statement.setString(1, playerNickname);
             ResultSet resultSet = statement.executeQuery();
 

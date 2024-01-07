@@ -1,6 +1,7 @@
 package org.liny.Managers;
 
 import org.jetbrains.annotations.NotNull;
+import org.liny.ConnectionManager;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -13,8 +14,7 @@ public class SpectatorManager {
 
     public static void addSpec(@NotNull String object, @NotNull String subject, @NotNull String message, @NotNull String date) {
 
-        try (@NotNull Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             @NotNull PreparedStatement statement = connection.prepareStatement("INSERT INTO specs (spectator, subject, message, date) VALUES (?, ?, ?, ?)")) {
+        try (@NotNull PreparedStatement statement = ConnectionManager.getConnection().prepareStatement("INSERT INTO specs (spectator, subject, message, date) VALUES (?, ?, ?, ?)")) {
 
             statement.setString(1, object);
             statement.setString(2, subject);

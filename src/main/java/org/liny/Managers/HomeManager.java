@@ -2,6 +2,7 @@ package org.liny.Managers;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.liny.ConnectionManager;
 import org.liny.DataPacks.Home;
 
 import java.sql.*;
@@ -16,9 +17,7 @@ public class HomeManager {
 
     public static void setHome(@NotNull UUID player, @NotNull Home home) {
 
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-
-             PreparedStatement statement = connection.prepareStatement("INSERT INTO homes (player_uuid, name, world_name, x, y, z) VALUES (?, ?, ?, ?, ?, ?)")) {
+        try (@NotNull PreparedStatement statement = ConnectionManager.getConnection().prepareStatement("INSERT INTO homes (player_uuid, name, world_name, x, y, z) VALUES (?, ?, ?, ?, ?, ?)")) {
 
             statement.setString(1, player.toString());
             statement.setString(2, home.name());
@@ -37,9 +36,7 @@ public class HomeManager {
 
         Home home = null;
 
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-
-             PreparedStatement statement = connection.prepareStatement("SELECT * FROM homes WHERE player_uuid = ? AND name = ?")) {
+        try (@NotNull PreparedStatement statement = ConnectionManager.getConnection().prepareStatement("SELECT * FROM homes WHERE player_uuid = ? AND name = ?")) {
 
             statement.setString(1, player.toString());
             statement.setString(2, homeName);
@@ -67,9 +64,7 @@ public class HomeManager {
 
     public static @NotNull List<Home> getAllHomes(@NotNull UUID player) {
         List<Home> homes = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-
-             @NotNull PreparedStatement statement = connection.prepareStatement("SELECT * FROM homes WHERE player_uuid = ?")) {
+        try (@NotNull PreparedStatement statement = ConnectionManager.getConnection().prepareStatement("SELECT * FROM homes WHERE player_uuid = ?")) {
 
             statement.setString(1, player.toString());
 
@@ -96,9 +91,7 @@ public class HomeManager {
 
     public static void removeHome(@NotNull UUID player, @NotNull String name) {
 
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-
-             @NotNull PreparedStatement statement = connection.prepareStatement("DELETE FROM homes WHERE player_uuid = ? AND name = ?")) {
+        try (@NotNull PreparedStatement statement = ConnectionManager.getConnection().prepareStatement("DELETE FROM homes WHERE player_uuid = ? AND name = ?")) {
 
             statement.setString(1, player.toString());
             statement.setString(2, name);

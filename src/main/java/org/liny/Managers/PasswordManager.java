@@ -2,6 +2,7 @@ package org.liny.Managers;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.liny.ConnectionManager;
 
 import java.sql.*;
 
@@ -11,8 +12,7 @@ public class PasswordManager {
 
     public static @Nullable String getPassword(@NotNull String player_name) {
 
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             @NotNull PreparedStatement statement = connection.prepareStatement("SELECT password FROM passwords WHERE player_name = ?")) {
+        try (@NotNull PreparedStatement statement = ConnectionManager.getConnection().prepareStatement("SELECT password FROM passwords WHERE player_name = ?")) {
 
             statement.setString(1, player_name);
 
@@ -33,9 +33,8 @@ public class PasswordManager {
     }
 
     public static void setPassword(@NotNull String player_name, @NotNull String pass) {
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             PreparedStatement existStatement = connection.prepareStatement("SELECT 1 FROM passwords WHERE player_name = ?");
-             PreparedStatement updateStatement = connection.prepareStatement("UPDATE passwords SET password = ? WHERE player_name = ?")) {
+        try (@NotNull PreparedStatement existStatement = ConnectionManager.getConnection().prepareStatement("SELECT 1 FROM passwords WHERE player_name = ?");
+             @NotNull PreparedStatement updateStatement = ConnectionManager.getConnection().prepareStatement("UPDATE passwords SET password = ? WHERE player_name = ?")) {
 
             existStatement.setString(1, player_name);
 
@@ -56,8 +55,7 @@ public class PasswordManager {
 
     public static void removePassword(@NotNull String player_name) {
 
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             @NotNull PreparedStatement statement = connection.prepareStatement("DELETE FROM passwords WHERE player_name = ?")) {
+        try (@NotNull PreparedStatement statement = ConnectionManager.getConnection().prepareStatement("DELETE FROM passwords WHERE player_name = ?")) {
 
             statement.setString(1, player_name.toString());
 
@@ -71,9 +69,8 @@ public class PasswordManager {
 
     public static void addPassword(String playerName) {
 
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             @NotNull PreparedStatement existStatement = connection.prepareStatement("SELECT * FROM passwords WHERE player_name = ?");
-             @NotNull PreparedStatement insertStatement = connection.prepareStatement("INSERT INTO passwords (player_name, password) VALUES (?, NULL)")) {
+        try (@NotNull PreparedStatement existStatement = ConnectionManager.getConnection().prepareStatement("SELECT * FROM passwords WHERE player_name = ?");
+             @NotNull PreparedStatement insertStatement = ConnectionManager.getConnection().prepareStatement("INSERT INTO passwords (player_name, password) VALUES (?, NULL)")) {
 
             existStatement.setString(1, playerName);
             ResultSet existResultSet = existStatement.executeQuery();

@@ -1,14 +1,13 @@
 package org.liny.Managers;
 
 import org.jetbrains.annotations.NotNull;
+import org.liny.ConnectionManager;
 import org.liny.DataPacks.Home;
 import org.liny.DataPacks.Point;
 
 import java.sql.*;
 import java.util.LinkedList;
 import java.util.UUID;
-
-import static org.liny.Main.*;
 
 public class RegionManager {
 
@@ -18,8 +17,7 @@ public class RegionManager {
     )
     public static void addRegion(@NotNull UUID player, @NotNull String name, @NotNull Integer x, @NotNull Integer y, @NotNull Integer z, @NotNull String worldName) {
 
-        try (@NotNull Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             @NotNull PreparedStatement statement = connection.prepareStatement("INSERT INTO regions (player_uuid, name, x, y, z, world_name) VALUES (?, ?, ?, ?, ?, ?)")) {
+        try (@NotNull PreparedStatement statement = ConnectionManager.getConnection().prepareStatement("INSERT INTO regions (player_uuid, name, x, y, z, world_name) VALUES (?, ?, ?, ?, ?, ?)")) {
 
             statement.setString(1, player.toString());
             statement.setString(2, name);
@@ -37,8 +35,7 @@ public class RegionManager {
 
     public static void addRegion(@NotNull UUID player, @NotNull Point point) {
 
-        try (@NotNull Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             @NotNull PreparedStatement statement = connection.prepareStatement("INSERT INTO regions (player_uuid, name, x, y, z, world_name) VALUES (?, ?, ?, ?, ?, ?)")) {
+        try (@NotNull PreparedStatement statement = ConnectionManager.getConnection().prepareStatement("INSERT INTO regions (player_uuid, name, x, y, z, world_name) VALUES (?, ?, ?, ?, ?, ?)")) {
 
             statement.setString(1, player.toString());
             statement.setString(2, point.name());
@@ -56,8 +53,7 @@ public class RegionManager {
 
     public static void removeRegion(@NotNull String name) {
 
-        try (@NotNull Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             @NotNull PreparedStatement statement = connection.prepareStatement("DELETE FROM regions WHERE name = ?")) {
+        try (@NotNull PreparedStatement statement = ConnectionManager.getConnection().prepareStatement("DELETE FROM regions WHERE name = ?")) {
 
             statement.setString(1, name);
             statement.executeUpdate();
@@ -72,8 +68,7 @@ public class RegionManager {
 
         LinkedList<String> protectionIds = new LinkedList<>();
 
-        try (@NotNull Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             @NotNull PreparedStatement statement = connection.prepareStatement("SELECT name FROM regions WHERE player_uuid = ?")) {
+        try (@NotNull PreparedStatement statement = ConnectionManager.getConnection().prepareStatement("SELECT name FROM regions WHERE player_uuid = ?")) {
 
             statement.setString(1, player.toString());
             ResultSet resultSet = statement.executeQuery();
@@ -95,9 +90,7 @@ public class RegionManager {
 
         LinkedList<Home> homeList = new LinkedList<>();
 
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-
-             PreparedStatement statement = connection.prepareStatement("SELECT name, world_name, x, y, z FROM regions")) {
+        try (@NotNull PreparedStatement statement = ConnectionManager.getConnection().prepareStatement("SELECT name, world_name, x, y, z FROM regions")) {
 
             ResultSet resultSet = statement.executeQuery();
 
@@ -123,8 +116,7 @@ public class RegionManager {
 
     public static @NotNull Boolean isRegionExists(@NotNull UUID player, @NotNull String name) {
 
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             PreparedStatement statement = connection.prepareStatement("SELECT id FROM regions WHERE (name, player_uuid) = (?, ?)")) {
+        try (@NotNull PreparedStatement statement = ConnectionManager.getConnection().prepareStatement("SELECT id FROM regions WHERE (name, player_uuid) = (?, ?)")) {
 
             statement.setString(1, name);
             statement.setString(2, player.toString());

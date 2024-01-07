@@ -2,6 +2,7 @@ package org.liny.Managers;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.liny.ConnectionManager;
 import org.liny.DataPacks.Home;
 import org.liny.DataPacks.Warp;
 
@@ -13,8 +14,7 @@ public class WarpManager {
 
     public static void setWarp(@NotNull String player, @NotNull Home warp) {
 
-        try (@NotNull Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             @NotNull PreparedStatement statement = connection.prepareStatement("INSERT INTO warps (player_uuid, name, world_name, x, y, z) VALUES (?, ?, ?, ?, ?, ?)")) {
+        try (@NotNull PreparedStatement statement = ConnectionManager.getConnection().prepareStatement("INSERT INTO warps (player_uuid, name, world_name, x, y, z) VALUES (?, ?, ?, ?, ?, ?)")) {
 
             statement.setString(1, player);
             statement.setString(2, warp.name());
@@ -33,8 +33,7 @@ public class WarpManager {
     public static @Nullable Warp getWarp(@NotNull String warpName) {
 
         Warp home = null;
-        try (@NotNull Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             @NotNull PreparedStatement statement = connection.prepareStatement("SELECT * FROM warps WHERE name = ?")) {
+        try (@NotNull PreparedStatement statement = ConnectionManager.getConnection().prepareStatement("SELECT * FROM warps WHERE name = ?")) {
 
             statement.setString(1, warpName);
 
@@ -62,8 +61,7 @@ public class WarpManager {
     public static @Nullable Warp getWarpFromUuid(@NotNull String playerUuid) {
 
         Warp home = null;
-        try (@NotNull Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             @NotNull PreparedStatement statement = connection.prepareStatement("SELECT * FROM warps WHERE player_uuid = ? LIMIT 1")) {
+        try (@NotNull PreparedStatement statement = ConnectionManager.getConnection().prepareStatement("SELECT * FROM warps WHERE player_uuid = ? LIMIT 1")) {
 
             statement.setString(1, playerUuid);
 
@@ -89,8 +87,7 @@ public class WarpManager {
 
     public static void removeWarp(@NotNull String player, @NotNull String name) {
 
-        try (@NotNull Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             @NotNull PreparedStatement statement = connection.prepareStatement("DELETE FROM warps WHERE player_uuid = ? AND name = ?")) {
+        try (@NotNull PreparedStatement statement = ConnectionManager.getConnection().prepareStatement("DELETE FROM warps WHERE player_uuid = ? AND name = ?")) {
 
             statement.setString(1, player);
             statement.setString(2, name);

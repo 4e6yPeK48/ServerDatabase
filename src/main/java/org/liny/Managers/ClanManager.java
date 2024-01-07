@@ -2,6 +2,7 @@ package org.liny.Managers;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.liny.ConnectionManager;
 import org.liny.DataPacks.Clan;
 
 import java.sql.*;
@@ -22,9 +23,7 @@ public class ClanManager {
 
     public static void setClanField(@NotNull String clanName, @NotNull String fieldName, int value) {
 
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-
-             @NotNull PreparedStatement statement = connection.prepareStatement(
+        try (@NotNull PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(
                      "UPDATE clans SET " + fieldName + " = ? WHERE name = ?")) {
 
             statement.setInt(1, value);
@@ -38,9 +37,7 @@ public class ClanManager {
 
     public static int getClanField(@NotNull String clanName, @NotNull String fieldName) {
 
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-
-             @NotNull PreparedStatement statement = connection.prepareStatement(
+        try (@NotNull PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(
                      "SELECT " + fieldName + " FROM clans WHERE name = ?")) {
 
             statement.setString(1, clanName);
@@ -69,9 +66,7 @@ public class ClanManager {
 
     public static @NotNull Boolean clanExists(@NotNull String clanName) {
 
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-
-             @NotNull PreparedStatement statement = connection.prepareStatement("SELECT * FROM clans WHERE name = ?")) {
+        try (@NotNull PreparedStatement statement = ConnectionManager.getConnection().prepareStatement("SELECT * FROM clans WHERE name = ?")) {
 
             statement.setString(1, clanName);
 
@@ -89,9 +84,7 @@ public class ClanManager {
 
     public static void createClan(@NotNull Clan clan) {
 
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-
-             @NotNull PreparedStatement statement = connection.prepareStatement(
+        try (@NotNull PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(
                      "INSERT INTO clans (name, prefix, owner, level, balance, exp) VALUES (?, ?, ?, ?, ?, ?)")) {
 
             statement.setString(1, clan.name());
@@ -110,9 +103,7 @@ public class ClanManager {
 
     public static void removeClan(@NotNull String clanName) {
 
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-
-             @NotNull PreparedStatement statement = connection.prepareStatement("DELETE FROM clans WHERE name = ?")) {
+        try (@NotNull PreparedStatement statement = ConnectionManager.getConnection().prepareStatement("DELETE FROM clans WHERE name = ?")) {
 
             statement.setString(1, clanName);
 
@@ -125,9 +116,7 @@ public class ClanManager {
 
     public static @Nullable Clan getClan(@NotNull String clanName) {
 
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-
-             @NotNull PreparedStatement statement = connection.prepareStatement("SELECT * FROM clans WHERE name = ?")) {
+        try (@NotNull PreparedStatement statement = ConnectionManager.getConnection().prepareStatement("SELECT * FROM clans WHERE name = ?")) {
 
             statement.setString(1, clanName);
 
@@ -136,14 +125,12 @@ public class ClanManager {
                 if (resultSet.next()) {
 
                     return new Clan(
-
                             resultSet.getString("name"),
                             resultSet.getString("prefix"),
                             resultSet.getString("owner"),
                             resultSet.getInt("level"),
                             resultSet.getInt("balance"),
                             resultSet.getInt("exp")
-
                     );
 
                 }
@@ -158,9 +145,7 @@ public class ClanManager {
 
     public static @Nullable Clan getClanByPlayer(@NotNull String playerName) {
 
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-
-             @NotNull PreparedStatement statement = connection.prepareStatement("SELECT * FROM players WHERE name = ?")) {
+        try (@NotNull PreparedStatement statement = ConnectionManager.getConnection().prepareStatement("SELECT * FROM players WHERE name = ?")) {
 
             statement.setString(1, playerName);
 
@@ -186,9 +171,7 @@ public class ClanManager {
 
     public static @Nullable String getClanInventory(@NotNull String clanName) {
 
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-
-             @NotNull PreparedStatement statement = connection.prepareStatement(
+        try (@NotNull PreparedStatement statement = ConnectionManager.getConnection().prepareStatement(
                      "SELECT inventory FROM clans WHERE name = ?")) {
 
             statement.setString(1, clanName);

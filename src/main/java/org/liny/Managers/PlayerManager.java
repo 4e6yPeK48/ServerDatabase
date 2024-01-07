@@ -2,19 +2,17 @@ package org.liny.Managers;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.liny.ConnectionManager;
 
 import java.sql.*;
 import java.util.LinkedList;
 import java.util.UUID;
 
-import static org.liny.Main.*;
-
 public class PlayerManager {
 
     public static @NotNull Boolean playerExists(@NotNull UUID player) {
 
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             @NotNull PreparedStatement statement = connection.prepareStatement("SELECT * FROM players WHERE uuid = ?")) {
+        try (@NotNull PreparedStatement statement = ConnectionManager.getConnection().prepareStatement("SELECT * FROM players WHERE uuid = ?")) {
 
             statement.setString(1, player.toString());
 
@@ -31,8 +29,8 @@ public class PlayerManager {
     }
 
     public static void addPlayer(@NotNull UUID player, @NotNull String playerName, @NotNull String playerIp) {
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             @NotNull PreparedStatement statement = connection.prepareStatement("INSERT INTO players (uuid, name, ip) VALUES (?, ?, ?)")) {
+
+        try (@NotNull PreparedStatement statement = ConnectionManager.getConnection().prepareStatement("INSERT INTO players (uuid, name, ip) VALUES (?, ?, ?)")) {
 
             statement.setString(1, player.toString());
             statement.setString(2, playerName);
@@ -40,7 +38,7 @@ public class PlayerManager {
 
             statement.executeUpdate();
 
-            try (@NotNull PreparedStatement passwordStatement = connection.prepareStatement("INSERT INTO passwords (player_name) VALUES (?)")) {
+            try (@NotNull PreparedStatement passwordStatement = ConnectionManager.getConnection().prepareStatement("INSERT INTO passwords (player_name) VALUES (?)")) {
                 passwordStatement.setString(1, playerName);
                 passwordStatement.executeUpdate();
             }
@@ -53,8 +51,7 @@ public class PlayerManager {
 
     public static @Nullable String getIp(@NotNull String playerUUID) {
 
-        try (@NotNull Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             @NotNull PreparedStatement statement = connection.prepareStatement("SELECT ip FROM players WHERE uuid = ?")) {
+        try (@NotNull PreparedStatement statement = ConnectionManager.getConnection().prepareStatement("SELECT ip FROM players WHERE uuid = ?")) {
 
             statement.setString(1, playerUUID);
 
@@ -78,8 +75,7 @@ public class PlayerManager {
 
         LinkedList<String> playerNames = new LinkedList<>();
 
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             @NotNull PreparedStatement statement = connection.prepareStatement("SELECT name FROM players WHERE ip = ?")) {
+        try (@NotNull PreparedStatement statement = ConnectionManager.getConnection().prepareStatement("SELECT name FROM players WHERE ip = ?")) {
 
             statement.setString(1, playerIp);
             @NotNull ResultSet resultSet = statement.executeQuery();
